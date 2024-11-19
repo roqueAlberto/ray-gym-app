@@ -28,9 +28,26 @@ export async function GET() {
     }
 }
 
+export async function DELETE(request: Request, { params }: Params) {
+    const {alumnoID, actividadId} = await request.json()
+    try {
+        await prisma.inscripcion.deleteMany({
+            where: {
+                alumnoID,
+                actividadId
+            },
+        })
+    
+        return NextResponse.json({status: 204})
+    } catch (error: any) {
+        console.log(error)
+        return NextResponse.json({ error: error.message })
+    }
+}
+
 export async function POST(request: Request, { params }: Params) {
 
-    const { alumno, actividad } = await request.json()
+    const { idAlumno, idActividad } = await request.json()
 
     try {
         const result = await prisma.inscripcion.create({
@@ -38,17 +55,13 @@ export async function POST(request: Request, { params }: Params) {
                 membresiaActiva: true,
                 fecha: new Date(),
                 alumno: {
-                    create:
-                    {
-                        nombre: alumno.nombre,
-                        apellido: alumno.apellido,
-                        dni: alumno.dni,
-                        nombreCompleto: alumno.nombre + '' + alumno.apellido
+                    connect: {
+                        id: idAlumno
                     }
                 },
                 actividad: {
                     connect: {
-                        id: actividad.id
+                        id: idActividad
                     }
                 }
             }, omit: {

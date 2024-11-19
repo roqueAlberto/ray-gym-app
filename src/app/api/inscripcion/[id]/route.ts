@@ -1,6 +1,6 @@
 
 import { NextResponse } from "next/server";
-import { URL_INSCRIPCION } from "@/app/utils/constants";
+import { URL_INSCRIPCION } from "@/utils/constants";
 import { createConnection } from '@/libs/mysql'
 import { prisma } from "@/libs/prisma";
 import { Alumno } from "@/app/class/Alumno";
@@ -64,6 +64,8 @@ export async function PUT(request: Request, { params }: Params) {
 }
 
 export async function DELETE(request: Request, { params }: Params) {
+
+    
     try {
         await prisma.inscripcion.delete({
             where: {
