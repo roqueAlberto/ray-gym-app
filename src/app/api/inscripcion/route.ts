@@ -7,8 +7,6 @@ interface Params {
     params: { id: string }
 }
 
-
-
 export async function GET() {
     try {
         const inscripciones = await prisma.inscripcion.findMany({
@@ -48,6 +46,7 @@ export async function DELETE(request: Request, { params }: Params) {
 export async function POST(request: Request, { params }: Params) {
 
     const { idAlumno, idActividad } = await request.json()
+    console.log(idAlumno, idActividad)
 
     try {
         const result = await prisma.inscripcion.create({
@@ -78,33 +77,4 @@ export async function POST(request: Request, { params }: Params) {
     } catch (error: any) {
         return NextResponse.json({ message: error.message, status: 500 })
     }
-
-
-
-
-    /* 
-    const { fecha, aptaMedica, activo, alumno, idActividad } = await request.json();
-     const { nombre, apellido, dni, nombreCompleto } = alumno
-    const connection = await createConnection();
-     try {
-         await connection.beginTransaction();
- 
-         const [resultAlumno] = await connection.query('INSERT INTO alumno SET ?', {
-             nombre,
-             apellido,
-             dni,
-             nombre_completo: nombreCompleto
-         })
- 
-         const [resultInscripcion] = await connection.query('INSERT INTO inscripcion SET ?', {
-             fecha,
-             apta_medica: aptaMedica,
-             activo,
-             id_alumno: resultAlumno.insertId,
-             id_actividad: idActividad
-         })
- 
-         await connection.commit()
-         return NextResponse.json({ id: resultInscripcion.insertId, fecha, aptaMedica, activo, alumno, idActividad }) */
-
 }

@@ -23,7 +23,7 @@ const Navbar = () => {
                                 <p className="nav-link active" aria-current="page">Inicio</p>
                             </li>
                         </Link>
-                        <Link href='/inscriptos' >
+                        <Link href='/inscriptos' replace>
                             <li className="nav-item">
                                 <p className="nav-link">Inscriptos</p>
                             </li>

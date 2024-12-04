@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-
-
 import Navbar from "@/components/Navbar";
 
 const geistSans = localFont({
@@ -19,7 +17,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "RAE GYM",
-  description: "Gimnacio multifuncional",
+  description: "Gimnasio multifuncional",
 };
 
 export default function RootLayout({
@@ -30,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <Navbar></Navbar>
+      <Navbar />
         {children}
       </body>
     </html>

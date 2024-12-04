@@ -1,9 +1,6 @@
 
 import { NextResponse } from "next/server";
-import { URL_INSCRIPCION } from "@/utils/constants";
-import { createConnection } from '@/libs/mysql'
 import { prisma } from "@/libs/prisma";
-import { Alumno } from "@/app/class/Alumno";
 
 interface Params {
     params: { id: string }
@@ -29,7 +26,6 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function PUT(request: Request, { params }: Params) {
     const data = await request.json()
-    console.log(data)
     try {
         const alumno = await prisma.alumno.update({
             where: { id: Number(params.id) },
@@ -47,8 +43,7 @@ export async function DELETE(request: Request, { params }: Params) {
     try {
         await prisma.alumno.delete({
             where: {
-                id: Number(params.id),
-                nombre:'sads'
+                id: Number(params.id)
             },
         })
         return NextResponse.json({ message: 'OK', status: 204 })

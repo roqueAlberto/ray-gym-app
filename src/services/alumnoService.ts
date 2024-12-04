@@ -1,21 +1,19 @@
-import { Alumno } from "@prisma/client"
 
 const headers = new Headers()
 headers.append("Content-Type", "application/json")
 
 export const getAll = async () => {
     try {
-        const response = await fetch('/api/alumno')
-        const json = await response.json()
-        return json
+        const response = await fetch('http://localhost:3000/api/alumno',{ cache:'no-store' })
+        const data = await response.json()
+        return data
     } catch (error) {
         throw error
     }
 }
 
 
-
-export const actualizarDatosPersonales = async (id: string, alumno: Object) => {
+export const update = async (id: string, alumno: Object) => {
     try {
         const response = await fetch(`/api/alumno/${id}`, 
             { 
@@ -25,18 +23,17 @@ export const actualizarDatosPersonales = async (id: string, alumno: Object) => {
                 headers 
             }
         )
-        const json = await response.json()
-        if (json.status != 201) {
-            throw Error(json.message)
+        const data = await response.json()
+        if (data.status != 201) {
+            throw Error(data.message)
         }
-        return json
     } catch (error: any) {
         throw error;
     }
 }
 
 
-export const registrar = async (alumno: Object) => {
+export const save = async (alumno: Object) => {
     try {
         const response = await fetch('/api/alumno', 
             { 
@@ -53,5 +50,20 @@ export const registrar = async (alumno: Object) => {
         return data.result
     } catch (error: any) {
         throw error;
+    }
+}
+
+
+export const deleteById = async (id: number) => {
+    try {
+        const response = await fetch(`/api/alumno/${id}`, { method: 'DELETE'} )
+        const json = await response.json()
+
+        if (json.status != 204) {
+            throw Error(json.message)
+        }
+        return json
+    } catch (error) {
+        throw error
     }
 }

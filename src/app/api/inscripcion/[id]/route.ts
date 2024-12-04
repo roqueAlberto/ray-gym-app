@@ -1,9 +1,7 @@
 
 import { NextResponse } from "next/server";
-import { URL_INSCRIPCION } from "@/utils/constants";
-import { createConnection } from '@/libs/mysql'
 import { prisma } from "@/libs/prisma";
-import { Alumno } from "@/app/class/Alumno";
+
 
 interface Params {
     params: { id: string }
@@ -59,8 +57,6 @@ export async function PUT(request: Request, { params }: Params) {
     } catch (error: any) {
         return NextResponse.json({ message: error.message, status: 500 })
     }
-
-
 }
 
 export async function DELETE(request: Request, { params }: Params) {

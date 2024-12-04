@@ -27,7 +27,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             })
         }
 
-        return NextResponse.json(resultado)
+        return NextResponse.json({ resultado, status: 200 })
     } catch (error: any) {
         console.log(error)
         return NextResponse.json({ error: error.message })
