@@ -6,6 +6,9 @@ headers.append("Content-Type", "application/json")
 export const findById = async (id: number) => {
     const response = await fetch(`/api/inscripcion/${id}`)
     const json = await response.json()
+    if (!response.ok) {
+        throw new Error(json.message)
+    }
     return json
 }
 

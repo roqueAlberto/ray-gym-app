@@ -10,9 +10,11 @@ export interface Alumno {
   dni: string;
 }
 
-export interface AlumnoRegistro extends Alumno {
-  nombreCompleto: string;
+export interface AlumnoRegistro {
+  nombre: string;
+  apellido: string;
   dni: number;
+  nombreCompleto: string;
 }
 
 export interface AlumnoConInscripciones {
