@@ -29,6 +29,24 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## IDE Setup
+
+### IntelliJ IDEA / WebStorm
+
+1. Open the project folder directly in IntelliJ IDEA or WebStorm (**File → Open** and select the project root).
+2. IntelliJ will automatically detect the project as a Node.js/TypeScript project.
+3. Make sure the **Node.js** plugin is enabled (**Settings → Plugins**).
+4. Configure the Node.js interpreter: **Settings → Languages & Frameworks → Node.js** — select your installed Node.js version.
+5. Run `npm install` from the built-in terminal to install dependencies.
+6. To start the dev server, use the terminal: `npm run dev`, or create a **Run Configuration** of type **npm** with the script `dev`.
+7. The `.editorconfig` file is included so IntelliJ will automatically apply the project's code style settings.
+
+### VS Code
+
+1. Open the project folder in VS Code.
+2. Install recommended extensions when prompted (ESLint, Tailwind CSS IntelliSense).
+3. Run `npm install` and `npm run dev` from the integrated terminal.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
