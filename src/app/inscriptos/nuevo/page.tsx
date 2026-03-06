@@ -1,5 +1,5 @@
 import FormRegistro from '@/components/FormRegistro'
-import React, { Suspense } from 'react'
+import React from 'react'
 
 
 const NuevoPage = ({ params, }: { params: { id: string } }) => {

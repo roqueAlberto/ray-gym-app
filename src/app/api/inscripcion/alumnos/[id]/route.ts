@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/libs/prisma";
-import type { NextApiRequest, NextApiResponse } from 'next'
 
 interface Params {
     params: { id: string }
@@ -17,8 +16,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
             },
         })
         return NextResponse.json({ status: (count == 0 ? 200 : 204) })
-    } catch (error: any) {
-        console.log(error)
-        return NextResponse.json({ error: error.message })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }

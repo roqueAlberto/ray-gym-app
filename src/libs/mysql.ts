@@ -1,7 +1,7 @@
 
-import mysql from 'mysql2/promise';
+import mysql, { Connection } from 'mysql2/promise';
 
-let connection: any
+let connection: Connection | null = null
 
 export const  createConnection = async () => {
   if(!connection){
@@ -14,8 +14,4 @@ export const  createConnection = async () => {
     });
   }
   return connection
-   
-
 }
-
-

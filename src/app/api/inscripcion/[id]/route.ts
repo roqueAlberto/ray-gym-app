@@ -8,20 +8,30 @@ interface Params {
 }
 
 export async function GET(request: Request, { params }: Params) {
-    const inscripcion = await prisma.inscripcion.findUnique({
-        where: {
-            id: Number(params.id),
-        },
-        omit: {
-            alumnoID: true,
-            actividadId: true
-        }, include:
-        {
-            alumno: true,
-            actividad: true
+    try {
+        const inscripcion = await prisma.inscripcion.findUnique({
+            where: {
+                id: Number(params.id),
+            },
+            omit: {
+                alumnoID: true,
+                actividadId: true
+            }, include:
+            {
+                alumno: true,
+                actividad: true
+            }
+        })
+
+        if (!inscripcion) {
+            return NextResponse.json({ message: 'Inscripción no encontrada' }, { status: 404 })
         }
-    })
-    return NextResponse.json(inscripcion)
+
+        return NextResponse.json(inscripcion)
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ message }, { status: 500 })
+    }
 }
 
 export async function PUT(request: Request, { params }: Params) {
@@ -54,14 +64,13 @@ export async function PUT(request: Request, { params }: Params) {
             }
         })
         return NextResponse.json({ inscripcion, status: 201 })
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message, status: 500 })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ message, status: 500 }, { status: 500 })
     }
 }
 
 export async function DELETE(request: Request, { params }: Params) {
-
-    
     try {
         await prisma.inscripcion.delete({
             where: {
@@ -69,7 +78,8 @@ export async function DELETE(request: Request, { params }: Params) {
             },
         })
         return NextResponse.json({ message: 'OK', status: 204 })
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message }, { status: 500 })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ message }, { status: 500 })
     }
 }

@@ -1,36 +1,39 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { inscribirActividad, deleteByAlumnoAndActividad } from '@/services/inscripcionService'
 import { update, save } from '@/services/alumnoService'
 import {actividadesAlumno} from '@/utils/constants'
+import { Actividad, InscripcionDetalle } from '@/types'
 
 
 const FormRegistro = ({ params }: { params: { id: string } }) => {
   const { id } = params
-  const [actividades, setActividades] = useState(actividadesAlumno)
+  const [actividades, setActividades] = useState<Actividad[]>(actividadesAlumno)
   const [alumno, setAlumno] = useState({ nombre: '', apellido: '', dni: '' })
 
   const router = useRouter()
 
+  const cargarAlumno = useCallback(async () => {
+    if (!id) return
+    const response = await fetch(`/api/alumno/${id}`)
+    const data = await response.json()
+    const { nombre, apellido, dni, inscripciones } = data
+    setAlumno({ nombre, apellido, dni })
+    setActividades(prev => prev.map((actividad) => ({
+      ...actividad,
+      registrado: inscripciones.some((inscripcion: InscripcionDetalle) => actividad.id === inscripcion.actividad.id)
+    })))
+  }, [id])
+
   useEffect(() => {
-    if (id)
-      fetch(`/api/alumno/${id}`)
-        .then(response => response.json())
-        .then(alumno => {
-          const { nombre, apellido, dni, inscripciones } = alumno
-          setAlumno({ nombre, apellido, dni })
-          setActividades(actividades => actividades.map((actividad: any) => {
-            actividad.registrado = inscripciones.some((inscripcion: any) => actividad.id == inscripcion.actividad.id)
-            return actividad
-          }))
-        })
-  }, [])
+    cargarAlumno()
+  }, [cargarAlumno])
 
 
-  const onChangeAlumno = ({ target }: any) => {
+  const onChangeAlumno = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = target
     setAlumno({ ...alumno, [name]: value })
   }
@@ -48,8 +51,9 @@ const FormRegistro = ({ params }: { params: { id: string } }) => {
         const response = await save(registro)
         router.push(`/inscriptos/detalles/${response.id}`)
       }
-    } catch (error:any) {
-      alert('Ocurrio un error al realizar la acción. Mensaje de error: ' + error.message)
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Error desconocido'
+      alert('Ocurrio un error al realizar la acción. Mensaje de error: ' + message)
     }
   }
 
@@ -64,8 +68,9 @@ const FormRegistro = ({ params }: { params: { id: string } }) => {
 
         alert('Se registro la inscripion a ' + actividad + ' con exito!!!')
         
-      } catch (error: any) {
-        alert('No se puedo registrar la inscripcion a ' + actividad + '. Error: ' + error.message)
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error desconocido'
+        alert('No se puedo registrar la inscripcion a ' + actividad + '. Error: ' + message)
       }
     }
   }
@@ -81,17 +86,18 @@ const FormRegistro = ({ params }: { params: { id: string } }) => {
         establecerEstadoActividad(nroActividad, false)
 
         router.refresh()
-      } catch (error: any) {
-        alert('No se pudo eliminar la inscripcion a ' + actividad + '. Error: ' + error.message)
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error desconocido'
+        alert('No se pudo eliminar la inscripcion a ' + actividad + '. Error: ' + message)
       }
     }
   }
 
 
   function establecerEstadoActividad(id: number, estado: boolean) {
-    setActividades(actividades => actividades.map((actividad: any) => {
-      if (actividad.id == id){
-        actividad.registrado = estado
+    setActividades(prev => prev.map((actividad) => {
+      if (actividad.id === id){
+        return { ...actividad, registrado: estado }
       }
       return actividad
     }))
@@ -152,7 +158,7 @@ const FormRegistro = ({ params }: { params: { id: string } }) => {
                 <h5 className="card-header">Actividades del gimnasio</h5>
                 <div className="list-group list-group-flush">
                   {actividades.map(({ id, descripcion, registrado }) =>
-                    <div className="form-check my-2 ms-3 mt-4">
+                    <div key={id} className="form-check my-2 ms-3 mt-4">
                       <label className="form-check-label" htmlFor="flexCheckChecked">{descripcion}</label>
                       {registrado ?
                         (<button className="btn btn-danger ms-3" onClick={() => eliminarRegistroActividad(id, descripcion)}><i className="bi bi-x-circle"></i><span className='ms-2 font-monospace'>Eliminar</span></button>) :
