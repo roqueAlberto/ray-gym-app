@@ -33,6 +33,16 @@ const Navbar = () => {
                                 <p className="nav-link">Nuevo</p>
                             </li>
                         </Link>
+                        <Link href='/agentes' replace>
+                            <li className="nav-item">
+                                <p className="nav-link">Agentes</p>
+                            </li>
+                        </Link>
+                        <Link href='/agentes/nuevo' replace>
+                            <li className="nav-item">
+                                <p className="nav-link">Nuevo Agente</p>
+                            </li>
+                        </Link>
                     </ul>
                 </div>
             </div>
