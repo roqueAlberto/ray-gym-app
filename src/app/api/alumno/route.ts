@@ -2,9 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/libs/prisma";
 
 
-
-
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest) {
     try {
         const parametro = request.nextUrl.searchParams.get('busqueda')
         let resultado;
@@ -28,21 +26,19 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         }
 
         return NextResponse.json({ resultado, status: 200 })
-    } catch (error: any) {
-        console.log(error)
-        return NextResponse.json({ error: error.message })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request) {
     const data = await request.json()
     try {
         const result = await prisma.alumno.create({ data })
-        return NextResponse.json({ result, status: 201 })
-    } catch (error: any) {
-        console.log(error)
-        return NextResponse.json({ message: error.message, status: 500 })
+        return NextResponse.json({ result, status: 201 }, { status: 201 })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ message, status: 500 }, { status: 500 })
     }
-
-
 }

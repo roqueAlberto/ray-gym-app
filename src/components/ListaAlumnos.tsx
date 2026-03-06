@@ -2,8 +2,13 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteById } from '@/services/alumnoService'
+import { AlumnoConInscripciones } from '@/types'
 
-const ListaAlumnos = ({ alumnos }: any) => {
+interface ListaAlumnosProps {
+    alumnos: AlumnoConInscripciones[];
+}
+
+const ListaAlumnos = ({ alumnos }: ListaAlumnosProps) => {
 
     const router = useRouter()
 
@@ -15,8 +20,9 @@ const ListaAlumnos = ({ alumnos }: any) => {
                 alert('Registro del alumno eliminado con exito!')
                 router.refresh()
             }
-        } catch (error: any) {
-            alert('Error al eliminar la inscripcion del alumno: ' + error.message)
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Error desconocido'
+            alert('Error al eliminar la inscripcion del alumno: ' + message)
         }
     }
 
@@ -38,7 +44,7 @@ const ListaAlumnos = ({ alumnos }: any) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {alumnos.map((alumno: any) => {
+                                    {alumnos.map((alumno) => {
                                         return <tr key={alumno.id} className='border border-solid border-l-0 border-r-0'>
                                             <th className='text-md px-6 py-3'>{alumno.nombreCompleto}</th>
                                             <th className='text-md px-6 py-3'>{alumno.dni}</th>

@@ -3,10 +3,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/libs/prisma";
 
 
-interface Params {
-    params: { id: string }
-}
-
 export async function GET() {
     try {
         const inscripciones = await prisma.inscripcion.findMany({
@@ -20,13 +16,13 @@ export async function GET() {
         })
     
         return NextResponse.json(inscripciones)
-    } catch (error: any) {
-        console.log(error)
-        return NextResponse.json({ error: error.message })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }
 
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: Request) {
     const {alumnoID, actividadId} = await request.json()
     try {
         await prisma.inscripcion.deleteMany({
@@ -37,16 +33,15 @@ export async function DELETE(request: Request, { params }: Params) {
         })
     
         return NextResponse.json({status: 204})
-    } catch (error: any) {
-        console.log(error)
-        return NextResponse.json({ error: error.message })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }
 
-export async function POST(request: Request, { params }: Params) {
+export async function POST(request: Request) {
 
     const { idAlumno, idActividad } = await request.json()
-    console.log(idAlumno, idActividad)
 
     try {
         const result = await prisma.inscripcion.create({
@@ -72,9 +67,10 @@ export async function POST(request: Request, { params }: Params) {
                 actividad: true
             }
         })
-        return NextResponse.json({result, status: 204})
+        return NextResponse.json({result, status: 201}, { status: 201 })
 
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message, status: 500 })
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error interno del servidor'
+        return NextResponse.json({ message, status: 500 }, { status: 500 })
     }
 }

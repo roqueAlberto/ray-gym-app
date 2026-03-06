@@ -1,12 +1,6 @@
-import { describe } from "node:test"
+import { Actividad } from "@/types";
 
-const HOST = "http://localhost:9090/fitnnesGym"
-
-
-export const CONTEXTO_ALUMNO = `${HOST}/alumno`
-export const CONTEXTO_EJERCICIO = `${HOST}/ejercicio`
-export const URL_INSCRIPCION = `${HOST}/inscripcion`
-export const actividadesAlumno = [
+export const actividadesAlumno: Actividad[] = [
     {
       id: 1,
       descripcion: 'Musculacion',
